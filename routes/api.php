@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WwjController;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 
@@ -93,7 +94,35 @@ Route::middleware('jwt.auth')->group(function () {
     //用户登出 ok
     Route::post('/user/logout', [WdwController::class, 'logout']);
 
+    //王文杰
+    //查询老师信息
+    Route::get('/admins/users/query', [WwjController::class, 'getTeacher']);
+//查询已通过申请的授课老师
+    Route::get('/courses/approved-teachers', [WwjController::class, 'getApprovedTeachers']);
+//确认该课程正式授课教师
+    Route::post('/courses/assign-teacher', [WwjController::class, 'assignTeacher']);
+//查看负责人
+    Route::get('/courses/responsibles', [WwjController::class, 'getHead']);
+//确认负责人
+    Route::post('/courses/ConfirmResponse', [WwjController::class, 'confirmHead']);
+//按学期查询课程信息
+    Route::get('/courses/semester-info', [WwjController::class, 'selectCourse']);
+//教师查看正式授课信息
+    Route::get('/teachers/assigned-courses', [WwjController::class,'getCourseByTeacher']);
+//结束选课
 
+    //汪珂旭
+    Route::post('/admins/end-course-selection', [WwjController::class,'endCourse']);
+
+    Route::get('/courses/info-and-teachers',[\App\Http\Controllers\WkxController::class,'admin_see_courses_application']);//查看老师所有的课程申请（管理员审核申请）
+
+    Route::get('/courses/search-teacher',[\App\Http\Controllers\WkxController::class,'teacher_search_courses']);//老师搜索课程信息（选择课程）
+
+    Route::delete('/admins/users/delete',[\App\Http\Controllers\WkxController::class,'admins_delete_users']);//删除用户（重置密码）
+
+    Route::get('/look/teachers/summary',[\App\Http\Controllers\WkxController::class,'look_teachers_summary']);//查看老师信息（老师总结页面）
+
+    Route::post('/courses/audit',[\App\Http\Controllers\WkxController::class,'courses_audit']);//审核课程（管理员端负责人审核）
 });
 
 

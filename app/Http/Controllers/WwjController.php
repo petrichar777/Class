@@ -3,16 +3,6 @@
 namespace App\Http\Controllers;
 
 
-use Illuminate\Http\Request;
-
-class WwjController extends Controller
-{
-    //
-
-class WwjController
-{
-
-
 use App\Models\course_assignments;
 use App\Models\courses;
 use App\Models\semesters;

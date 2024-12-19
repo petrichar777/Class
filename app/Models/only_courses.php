@@ -2,22 +2,30 @@
 
 namespace App\Models;
 
-
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Crypt;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
 use Exception;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class only_courses extends Authenticatable implements JWTSubject
+class only_courses extends Model implements JWTSubject
 {
     use HasFactory;
 
     protected $table = "only_courses";
     public $timestamps = true;
     protected $primaryKey = "id";
-    protected $fillable = ['semester', 'created_at', 'name' . 'updated_at', 'category', 'nature'.'credit','hours'];
+    protected $guarded = []; // 表示所有字段都可以被批量赋值
+
+    protected $fillable = [
+        'name',
+        'category',
+        'nature',
+        'credit',
+        'hours',
+        'number_classes',
+        'semester'
+    ];
 
     /**
      * 获取将存储在 JWT 中的标识符。
@@ -32,12 +40,14 @@ class only_courses extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        return ['role' => 'only_courses'];
     }
+
+    // 查询课程信息
     public static function check($data)
     {
         try {
-            $Information = only_courses::where('semester', $data['semester'])
+            $information = self::where('semester', $data['semester'])
                 ->select(
                     'name',
                     'category',
@@ -45,19 +55,20 @@ class only_courses extends Authenticatable implements JWTSubject
                     'credit',
                     'hours',
                     'number_classes',
-                    'semester',
+                    'semester'
                 )
                 ->get();
-            return $Information;
+            return $information;
         } catch (Exception $e) {
-            return 'error' . $e->getMessage();
+            return 'error: ' . $e->getMessage();
         }
     }
+
+    // 插入新课程信息
     public static function hand_insert($data)
     {
         try {
-            // 确保 $data 中的键名与数据库字段匹配
-            $Information = only_courses::insert([
+            $information = self::insert([
                 [
                     'name' => $data['name'],
                     'category' => $data['category'],
@@ -70,82 +81,70 @@ class only_courses extends Authenticatable implements JWTSubject
                     'updated_at' => now(),
                 ]
             ]);
-            return $Information;
-        } catch (\Exception $e) {
+            return $information;
+        } catch (Exception $e) {
             return 'error: ' . $e->getMessage();
         }
-}
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class only_courses extends Model
-{
-    use HasFactory;
-
-
-    protected $table = "only_courses";
-    public $timestamps = true;
-    protected $primaryKey = "id";
-    protected $guarded = [];
-
-    protected $fillable = [
-        'name' ,
-        'category' ,
-        'nature' ,
-        'credit' ,
-        'hours' ,
-        'number_classes',
-        'semester' ,];
-    public function getJWTIdentifier()
-    {
-        //getKey() 方法用于获取模型的主键值
-        return $this->getKey();
     }
 
-    //返回一个包含自定义声明的关联数组。
-    public function getJWTCustomClaims()
+    // 更新课程的班级数量
+    public static function updateNumberClasses($data)
     {
-        return ['role' => 'only_courses'];
+        try {
+            // 查询课程的班级数量
+            $classCount = Courses::where('name', $data['name'])
+                ->where('semester', $data['semester'])
+                ->count();
+
+            // 如果没有班级，删除 only_courses 中的相关记录
+            if ($classCount == 0) {
+                $result = self::where('name', $data['name'])
+                    ->where('semester', $data['semester'])
+                    ->delete();
+            } else {
+                // 更新班级数量
+                $result = self::where('name', $data['name'])
+                    ->where('semester', $data['semester'])
+                    ->update(['number_classes' => $classCount]);
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
     }
 
-    // 与 company_stars 表的关联
-    public function course_applications()
+    // 教师查询课程
+    public static function teacherSearchCourses($semester, $name)
+    {
+        try {
+            $data = self::where('semester', $semester)
+                ->where('name', 'like', "%$name%") // 使用模糊查询
+                ->select('id', 'name', 'category', 'nature', 'credit', 'hours', 'number_classes')
+                ->get();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+
+    // 查看课程信息
+    public static function seeCourse($onlyCourseIds)
+    {
+        try {
+            $data = self::whereIn('id', $onlyCourseIds)
+                ->select('name', 'category', 'nature', 'credit', 'hours', 'number_classes')
+                ->get()
+                ->toArray();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+
+    // 与 course_applications 表的关联
+    public function courseApplications()
     {
         return $this->hasMany(course_applications::class, 'only_course_id', 'id');
     }
-
-    public static function updateNumber_Classes($data)
-    {
-        try {
-            // 第一步：查询 courses 表，找出需要上这门课程的班级数量
-            $classCount = courses::where('name', $data['name'])  // 通过课程名查找
-            ->where('semester',$data['semester'])
-            ->count();  // 统计需要上这门课程的班级数
-
-            // 如果班级数为 0，删除 only_courses 表中的数据
-            if ($classCount == 0) {
-                // 删除 only_courses 表中对应的记录
-                $result = only_courses::where('name', $data['name'])
-                    ->where('semester',$data['semester'])
-                    ->delete();
-            } else {
-                // 第二步：更新 only_courses 表中的 number_classes 字段
-                $result = only_courses::where('name', $data['name'])  // 根据课程名查找对应的记录
-                ->where('semester',$data['semester'])
-                ->update(['number_classes' => $classCount]);  // 更新字段
-            }
-
-            // 返回更新或删除的结果
-            return $result;
-        } catch (\Exception $e) {
-            // 捕获异常并返回错误信息
-            return 'error: ' . $e->getMessage();
-        }
-    }
-
-
-
-
-
 }

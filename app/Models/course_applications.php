@@ -68,6 +68,61 @@ class course_applications extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(courses::class, 'course_id', 'id');
     }
+    public static function see_statue($teacher_id)
+    {
+        try {
+            $data = course_applications::where('teacher_id', $teacher_id)
+                ->pluck('only_course_id');//获取教师已经申请的course_id
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+    public static function delete_teacher($teacher_id)
+    {
+        try {
+            $data = course_applications::where('teacher_id', $teacher_id)
+                ->delete();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+
+    public static function make_status($course_id,$teacher_id,$status)
+    {
+        try {
+            $data = course_applications::where('course_id', $course_id)
+                ->where('teacher_id',$teacher_id)
+                ->update(['status' => $status]);
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+    public static function see_data()
+    {
+        try {
+            $data = course_applications::select('only_course_id','status','teacher_id')
+                ->get()
+                ->toArray();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+    public static function see_datas($department)
+    {
+        try {
+            $data = course_applications::where('department',$department)
+                ->select('only_course_id','status','teacher_id')
+                ->get()
+                ->toArray();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
 }
 
 

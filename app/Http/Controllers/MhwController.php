@@ -1,9 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
-
-
 use App\Models\course_assignments;
 use App\Models\course_applications;
 use App\Models\only_courses;

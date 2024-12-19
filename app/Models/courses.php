@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Crypt;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -17,8 +16,7 @@ class courses extends Authenticatable implements JWTSubject
     protected $table = "courses";
     public $timestamps = true;
     protected $primaryKey = "id";
-    protected $fillable = [  'semester', 'department', 'name', 'code', 'category', 'credit', 'hours', 'grade', 'class_name', 'class_size','created_at','updated_at'];
-
+    protected $fillable = ['semester', 'department', 'name', 'code', 'category', 'credit', 'hours', 'grade', 'class_name', 'class_size', 'created_at', 'updated_at'];
 
     /**
      * 获取将存储在 JWT 中的标识符。
@@ -46,76 +44,44 @@ class courses extends Authenticatable implements JWTSubject
             return 'error: ' . $e->getMessage();
         }
     }
+
     /**
      * 更新课程信息。
      */
     public static function revise($data)
     {
-          try{
-            $Information=courses::where('id',$data['id'])
+        try {
+            $information = Courses::where('id', $data['id'])
                 ->update([
-                    'name' => $data['name'],//课程名称
-                    'code'=>$data['code'],//课程代码
-                    'category'=>$data['category'],//课程类别
-                    'nature'=>$data['nature'],//课程性质
-                    'credit'=>$data['credit'],//学分
-                    'hours'=>$data['hours'],//总学时
-                    'grade'=>$data['grade'],
-                    'class_name'=>$data['class_name'],//班级
-                    'class_size'=>$data['class_size'],//人数
-                    'semester'=>$data['semester'],
-                    'updated_at'=>now(),
-            ]);
-              // 返回受影响的行数
-              return  $Information;
-          } catch (Exception $e) {
-              return 'error: ' . $e->getMessage();
-          }
+                    'name' => $data['name'], //课程名称
+                    'code' => $data['code'], //课程代码
+                    'category' => $data['category'], //课程类别
+                    'nature' => $data['nature'], //课程性质
+                    'credit' => $data['credit'], //学分
+                    'hours' => $data['hours'], //总学时
+                    'grade' => $data['grade'],
+                    'class_name' => $data['class_name'], //班级
+                    'class_size' => $data['class_size'], //人数
+                    'semester' => $data['semester'],
+                    'updated_at' => now(),
+                ]);
+            // 返回受影响的行数
+            return $information;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
     }
-    public static function class_deleted($data)//查询课程表
+
+    public static function class_deleted($data) //查询课程表
     {
         try {
-            $Information = courses::where('id', $data['id'])
-                ->delete();
+            $information = Courses::where('id', $data['id'])->delete();
             // 如果记录存在，删除它
             // 返回受影响的行数
-            return  $Information;
+            return $information;
         } catch (Exception $e) {
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class courses extends Model
-{
-    use HasFactory;
-
-
-    protected $table = "courses";
-    public $timestamps = true;
-    protected $primaryKey = "id";
-    protected $guarded = [];
-
-    protected $fillable = [ 'name' ,
-                            'code',
-                            'category' ,
-                            'nature' ,
-                            'credit' ,
-                            'hours' ,
-                            'grade' ,
-                            'class_name',
-                            'class_size' ,
-                            'department' ,
-                            'semester' ,];
-    public function getJWTIdentifier()
-    {
-        //getKey() 方法用于获取模型的主键值
-        return $this->getKey();
-    }
-
-    //返回一个包含自定义声明的关联数组。
-    public function getJWTCustomClaims()
-    {
-        return ['role' => 'courses'];
+            return 'error: ' . $e->getMessage();
+        }
     }
 
     // 与 company_stars 表的关联
@@ -127,7 +93,7 @@ class courses extends Model
     // 与 course_assignments 表的关联
     public function course_assignments()
     {
-        return $this->hasMany(course_assignments::class, 'teacher_id', 'id');
+        return $this->hasMany(\course_assignments::class, 'teacher_id', 'id');
     }
 
     // 与 teacher_semester_stars 表的关联
@@ -139,37 +105,34 @@ class courses extends Model
     public static function delete_courses($id)
     {
         try {
-           $result = courses::where('id',$id)
-               ->delete();
-           return $result;
-        } catch (\Exception $e) {
-
+            $result = Courses::where('id', $id)
+                ->delete();
+            return $result;
+        } catch (Exception $e) {
             return 'error: ' . $e->getMessage();
         }
     }
 
-
     /**
      * 向数据库插入新课程数据。
      */
-
     public static function create($data)
     {
         try {
-            $ss = courses::insert([
-                'name' => $data['name'],//课程名称
-                'code'=>$data['code'],//课程代码
-                'category'=>$data['category'],//课程类别
-                'credit'=>$data['credit'],//学分
-                'nature'=>$data['nature'],//课程性质
-                'hours'=>$data['hours'],//总学时
-                'grade'=>$data['grade'],
-                'class_name'=>$data['class_name'],//班级
-                'class_size'=>$data['class_size'],//人数
-                'department'=>$data['department'],
-                'semester'=>$data['semester'],
-                'created_at'=>now(),
-                'updated_at'=>now(),
+            $ss = Courses::insert([
+                'name' => $data['name'], //课程名称
+                'code' => $data['code'], //课程代码
+                'category' => $data['category'], //课程类别
+                'credit' => $data['credit'], //学分
+                'nature' => $data['nature'], //课程性质
+                'hours' => $data['hours'], //总学时
+                'grade' => $data['grade'],
+                'class_name' => $data['class_name'], //班级
+                'class_size' => $data['class_size'], //人数
+                'department' => $data['department'],
+                'semester' => $data['semester'],
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
             return $ss;
         } catch (Exception $e) {
@@ -182,21 +145,6 @@ class courses extends Model
         return $this->hasMany(course_applications::class, 'course_id', 'id');
     }
 
-
-    protected $table = 'courses';
-    protected $fillable = [
-        'name',
-        'code',
-        'category',
-        'nature',
-        'credit',
-        'hours',
-        'grade',
-        'semester',
-        'class_name',
-        'class_size',
-        'department'
-    ];
     //查询课程信息
     public static function getCourseInfo(String $semester)
     {
@@ -208,6 +156,4 @@ class courses extends Model
                 'courses.semester', 'courses.class_name', 'courses.class_size', 'courses.department'
             ]);
     }
-
-
 }
