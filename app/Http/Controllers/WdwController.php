@@ -571,9 +571,5 @@ class WdwController extends Controller
 
 
 
-use Illuminate\Http\Request;
 
-class WdwController extends Controller
-{
-    //
-}
+

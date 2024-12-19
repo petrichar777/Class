@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers;
 
+
+use Illuminate\Http\Request;
+
+class WwjController extends Controller
+{
+    //
+
 class WwjController
 {
 
@@ -165,4 +172,5 @@ class WwjController extends Controller
         }else
         return json_success('成功结束选课', $status);
     }
+
 }

@@ -59,6 +59,8 @@ class users extends Authenticatable implements JWTSubject // 实现 JWTSubject �
         return $this->hasMany(teacher_semester_stats::class, 'teacher_id', 'id');
     }
 
+
+
     public static function CreateUser($data){
         try{
             $affectedRows = users::insert([
@@ -144,5 +146,6 @@ class users extends Model
 //            ->select('users.department')
             ->get(['users.name','users.username','users.department']);
     }
+
 
 }

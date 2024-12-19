@@ -3,6 +3,10 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+
 use Illuminate\Foundation\Auth\User as Authenticatable; // 改为继承 Authenticatable
 use Tymon\JWTAuth\Contracts\JWTSubject; // 引入 JWTSubject 接口
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -127,9 +131,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use PhpParser\Node\Scalar\String_;
 
+
 class teacher_semester_stats extends Model
 {
     use HasFactory;
+
+
     protected $table = 'teacher_semester_stats';
     protected $fillable = [
         'teacher_id',
@@ -218,6 +225,7 @@ class teacher_semester_stats extends Model
         }
         return false;
     }
+
 
 
 }
