@@ -147,5 +147,100 @@ class users extends Model
             ->get(['users.name','users.username','users.department']);
     }
 
+    public static function delete_people($id)
+    {
+        try {
+            $data = users::where('id', $id)
+                ->delete();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
 
+    public static function see_data($department)
+    {
+        try {
+            $data = users::where('department', $department)
+                ->where('role',"teacher")
+                ->select('name','id','department')
+                ->get()
+                ->toArray();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+
+    public static function see_data1()
+    {
+        try {
+            $data = users::where('role',"teacher")
+                ->select('name','id','department')
+                ->get()
+                ->toArray();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+
+    public static function see_role($id)
+    {
+        try {
+            $data = users::where('id', $id)
+                ->pluck('role');
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+
+    public static function look_data($department)
+    {
+        try {
+            $data = users::where('department', $department)
+                ->select('name','id')
+                ->get();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+    public static function see_datas($id)
+    {
+        try {
+            $department = users::where('id', $id)
+                ->pluck('department');
+            $data = users::where('department', $department)
+                ->where('role',"teacher")
+                ->get('name','id')
+                ->toArray();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+    public static function see_datas1($id)
+    {
+        try {
+            $data = users::where('id',$id)
+                ->pluck('department');
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+    public static function see_name($teacher_id)
+    {
+        try {
+            $data = users::whereIn('id',$teacher_id)
+                ->select('name')
+                ->get()
+                ->toArray();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
 }
