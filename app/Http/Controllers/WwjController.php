@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+class WwjController
+{
+
+
 use App\Models\course_assignments;
 use App\Models\courses;
 use App\Models\semesters;

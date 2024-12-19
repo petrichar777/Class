@@ -14,9 +14,10 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web', // 默认使用的guard，可以根据你的需求改成'admins'或其他
-        'passwords' => 'admins', // 如果使用密码重置功能，可以设置为admins或students
+        'guard' => 'users', // 改为 'users'，与下面的配置保持一致
+        'passwords' => 'users', // 确保密码重置配置也是针对 'users'
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -36,17 +37,9 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'users' => [
             'driver' => 'session',
-            'provider' => 'admins', // 默认guard使用admins
-        ],
-        'admins' => [
-            'driver' => 'session',
-            'provider' => 'admins', // 使用admins作为provider
-        ],
-        'students' => [
-            'driver' => 'session',
-            'provider' => 'students', // 使用students作为provider
+            'provider' => 'users', // 使用students作为provider
         ],
     ],
 
@@ -68,13 +61,9 @@ return [
     */
 
     'providers' => [
-        'admins' => [
+        'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\admins::class, // 模型名首字母应大写
-        ],
-        'students' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\students::class, // 模型名首字母应大写
+            'model' => App\Models\users::class, // 确保这里引用的是 users 模型
         ],
     ],
 
@@ -94,15 +83,9 @@ return [
     */
 
     'passwords' => [
-        'admins' => [
-            'provider' => 'admins',
-            'table' => 'password_resets', // 重置密码表
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'students' => [
-            'provider' => 'students',
-            'table' => 'password_resets', // 重置密码表
+        'users' => [ // 修改为 'users'，保持一致性
+            'provider' => 'users',
+            'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
