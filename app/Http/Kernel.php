@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'jwt.role' => \App\Http\Middleware\JWTRoleAuth::class,
         'jwt.role1' => \App\Http\Middleware\JwtAuth::class,
         'cors' => \App\Http\Middleware\EnableCrossRequestMiddleware::class,
+        'jwt.auth' => \App\Http\Middleware\JWTMiddleware::class,
     ];
 }
