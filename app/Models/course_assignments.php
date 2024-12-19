@@ -45,21 +45,41 @@ class course_assignments extends Model
         return $assignment;
     }
 
+//    //确认该课程的负责人
+//    public static function confirmHead(int $courseId, int $headId)
+//    {
+//        $assignment = self::firstOrCreate(
+//            ['course_id' => $courseId], // 根据课程 ID 查找记录
+//            ['head_id' => $headId, 'assigned_at' => now()] // 如果记录不存在，插入数据
+//        );
+//        if (!$assignment) {
+//            return false;
+//        }
+//        // 如果记录存在且需要更新
+//        if ($assignment->wasRecentlyCreated === false) {
+//            $assignment->head_id = $headId;
+//            $assignment->assigned_at = now();
+//            return $assignment->save();
+//        }
+//        return $assignment;
+//    }
+
     //确认该课程的负责人
     public static function confirmHead(int $courseId, int $headId)
     {
         $assignment = self::firstOrCreate(
-            ['course_id' => $courseId], // 根据课程 ID 查找记录
-            ['head_id' => $headId, 'assigned_at' => now()] // 如果记录不存在，插入数据
+            ['course_id' => $courseId],
+            ['head_id' => $headId, 'assigned_at' => now()]
         );
-        if (!$assignment) {
-            return false;
-        }
-        // 如果记录存在且需要更新
         if ($assignment->wasRecentlyCreated === false) {
             $assignment->head_id = $headId;
             $assignment->assigned_at = now();
-            return $assignment->save();
+            $assignment->save();
+        }
+        $user = users::find($headId);
+        if ($user) {
+            $user->role = 'head';
+            $user->save();
         }
         return $assignment;
     }
@@ -75,7 +95,7 @@ class course_assignments extends Model
     public static function getCourse(String $semester,int $teacherId)
     {
         return self::join('courses', 'course_assignments.course_id', '=', 'courses.id')
-            ->join('semester','courses.semester','=','semesters.semester')
+            ->join('semesters','courses.semester','=','semesters.semester')
             ->where('course_assignments.teacher_id',$teacherId)
             ->where('semesters.semester',$semester)
             ->get([
@@ -86,7 +106,7 @@ class course_assignments extends Model
                 'courses.nature',
                 'courses.credit',
                 'courses.hours',
-                'courses.semesters',
+                'courses.semester',
                 'courses.class_name',
                 'courses.class_size',
                 'courses.department'

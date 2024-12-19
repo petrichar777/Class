@@ -31,15 +31,18 @@ class users extends Model
         return self::join('course_applications', 'users.id', '=', 'course_applications.teacher_id')
             ->where('course_applications.status', '=', 'approved')
             ->where('course_applications.course_id', $courseId)
-            ->select('users.name')
-            ->get();
+//            ->select('users.name')
+//            ->select('users.department')
+//            ->select('users.username')
+            ->get(['users.name','users.username','users.department']);
     }
 
     //查看负责人
     public static function getHead()
     {
-        return self::where('role','head')
-            ->select('users.name')
-            ->get();
+        return self::where('role','teacher')
+//            ->select('users.name')
+//            ->select('users.department')
+            ->get(['users.name','users.username','users.department']);
     }
 }
