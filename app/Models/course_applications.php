@@ -35,49 +35,40 @@ class course_applications extends Authenticatable implements JWTSubject
     }
 
     public static function insert_applications($data)
-{
-    try{
-        // 插入数据
-        $Information = course_applications::insert([
-            'only_course_id' => $data['only_course_id'],
-            'teacher_id' => $data['teacher_id'],
-            'submitted_at' => now(),
-        ]);
-        return  $Information;
-    } catch (Exception $e) {
-        return 'error' . $e->getMessage();
+    {
+        try {
+            // 插入数据
+            $Information = course_applications::insert([
+                'only_course_id' => $data['only_course_id'],
+                'teacher_id' => $data['teacher_id'],
+                'submitted_at' => now(),
+            ]);
+            return $Information;
+        } catch (Exception $e) {
+            return 'error' . $e->getMessage();
+        }
     }
-}
-     public static function deleted_applications($teacher_id,$data)
-     {
 
-         try {
-             $Information = course_applications::where('teacher_id', $teacher_id)
-                 ->where('id', $data['id'])
-                 ->delete();
-             // 如果记录存在，删除它
-             // 返回受影响的行数
-             return $Information;
-         } catch (Exception $e) {
-             return 'error: ' . $e->getMessage();
-         }
-     }
+    public static function deleted_applications($teacher_id, $data)
+    {
+
+        try {
+            $Information = course_applications::where('teacher_id', $teacher_id)
+                ->where('id', $data['id'])
+                ->delete();
+            // 如果记录存在，删除它
+            // 返回受影响的行数
+            return $Information;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+
     public function course()
     {
         return $this->belongsTo(courses::class, 'course_id', 'id');
     }
-
-
-class course_applications
-{
-
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class course_applications extends Model
-{
-    use HasFactory;
-
-
 }
+
+
+

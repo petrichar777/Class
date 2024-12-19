@@ -10,12 +10,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Exception;
 
-class semesters extends Authenticatable implements JWTSubject
-
-use Illuminate\Foundation\Auth\User as Authenticatable; // 改为继承 Authenticatable
-use Illuminate\Support\Facades\Crypt;
-use Tymon\JWTAuth\Contracts\JWTSubject; // 引入 JWTSubject 接口
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class semesters extends Authenticatable implements JWTSubject // 实现 JWTSubject 接口
 
@@ -67,19 +61,6 @@ class semesters extends Authenticatable implements JWTSubject // 实现 JWTSubje
   }
 
 
-
-
-
-
-
-
-
-    //将用户的数据存储到token中
-    public function getJWTCustomClaims()
-    {
-        return ['role' => 'semester'];
-    }
-
     public static function create_semester($data)
     {
         try{
@@ -105,18 +86,6 @@ class semesters extends Authenticatable implements JWTSubject // 实现 JWTSubje
         }
     }
 
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class semesters extends Model
-{
-    use HasFactory;
-    protected $table = 'semesters';
-    protected $fillable = [
-        'semester',
-       'status'
-    ];
     //查询该学期状态
     public static function checkCourse(String $semester)
     {
