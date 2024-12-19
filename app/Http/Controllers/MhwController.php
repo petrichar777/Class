@@ -526,14 +526,3 @@ class MhwController extends Controller//发表论文
 
 
 
-class MhwController
-{
-
-
-use Illuminate\Http\Request;
-
-class MhwController extends Controller
-{
-    //
-}
-

@@ -81,6 +81,14 @@ Route::middleware('jwt.auth')->group(function () {
 
     //管理员删除课程安排表
     Route::delete('/admin/delete_course_assignments', [WdwController::class, 'delete_course_assignments']);
+//lyw
+    Route::post('/courses/leader-audit', [\App\Http\Controllers\LywController::class, 'audit']);
+    Route::post('/courses/assign', [\App\Http\Controllers\LywController::class, 'assign']);
+    Route::GET('/courses/leader-view', [\App\Http\Controllers\LywController::class, 'CheckApplication']);
+    Route::GET('/courses/approved-teachers', [\App\Http\Controllers\LywController::class, 'approved_teachers']);
+    Route::post('/courses/filter-for-assign', [\App\Http\Controllers\LywController::class, 'filter_assign']);
+    Route::GET('/courses/search-for-assign', [\App\Http\Controllers\LywController::class, 'HeaderSearch']);
+    Route::GET('/courses/search', [\App\Http\Controllers\LywController::class, 'getCourses']);
 
     //用户登出 ok
     Route::post('/user/logout', [WdwController::class, 'logout']);
