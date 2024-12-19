@@ -59,4 +59,93 @@ class users extends Authenticatable implements JWTSubject // 实现 JWTSubject �
         return $this->hasMany(teacher_semester_stats::class, 'teacher_id', 'id');
     }
 
+
+
+    public static function CreateUser($data){
+        try{
+            $affectedRows = users::insert([
+                    'username' => $data['username'],
+                    'name' => $data['name'],
+                    'role' => $data['role'],
+                    'department' => $data['department'],
+                    'password' => Crypt::encrypt($data['password']),
+                ]);
+            return $affectedRows;
+        }catch (\Exception $e){
+            return 'error: '. $e->getMessage();
+        }
+    }
+
+    public static function UpdatedUser($data){
+        try{
+            $affectedRows = users::where('id',$data['id'])
+                ->update([
+                    'username' => $data['username'],
+                    'name' => $data['name'],
+                    'department' => $data['department'],
+                    'password' => Crypt::encrypt($data['password']),
+                ]);
+            return $affectedRows;
+        }catch (\Exception $e){
+            return 'error: '. $e->getMessage();
+        }
+    }
+
+    public static function search_teacher($name){
+        try{
+           $result = users::where('name',$name)
+               ->select('username','name','department',)
+               ->get();
+           return $result;
+        }catch (\Exception $e){
+            return 'error: '. $e->getMessage();
+        }
+    }
+
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class users extends Model
+{
+    use HasFactory;
+    protected $table = 'users';
+    protected $fillable = [
+        'username',
+        'password',
+        'name',
+        'department',
+        'role',
+        'status'
+    ];
+
+    //（重置密码）查询教师信息
+    public static function getTeachers()
+    {
+        return DB::table('users')
+            ->get(['username','name','department']);
+    }
+    //查看已通过申请的授课老师
+    public static function getApprovedTeachers($courseId)
+    {
+        return self::join('course_applications', 'users.id', '=', 'course_applications.teacher_id')
+            ->where('course_applications.status', '=', 'approved')
+            ->where('course_applications.course_id', $courseId)
+//            ->select('users.name')
+//            ->select('users.department')
+//            ->select('users.username')
+            ->get(['users.name','users.username','users.department']);
+    }
+
+    //查看负责人
+    public static function getHead()
+    {
+        return self::where('role','teacher')
+//            ->select('users.name')
+//            ->select('users.department')
+            ->get(['users.name','users.username','users.department']);
+    }
+
+
 }

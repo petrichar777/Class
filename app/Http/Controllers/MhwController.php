@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+
 use App\Models\course_assignments;
 use App\Models\course_applications;
 use App\Models\only_courses;
@@ -523,4 +524,16 @@ class MhwController extends Controller//发表论文
 
 
 
+
+
+class MhwController
+{
+
+
+use Illuminate\Http\Request;
+
+class MhwController extends Controller
+{
+    //
+}
 

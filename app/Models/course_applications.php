@@ -67,4 +67,17 @@ class course_applications extends Authenticatable implements JWTSubject
         return $this->belongsTo(courses::class, 'course_id', 'id');
     }
 
+
+class course_applications
+{
+
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class course_applications extends Model
+{
+    use HasFactory;
+
+
 }
