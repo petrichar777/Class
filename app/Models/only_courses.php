@@ -146,6 +146,29 @@ class only_courses extends Model
 
 
 
-
+    public static function teacher_search__courses($semester,$name)
+    {
+        try {
+            $data = only_courses::where('semester', $semester)
+                ->where('name', 'like', "%$name%")//进行模糊查询
+                ->select('id','name', 'category','nature','credit','hours','number_classes')
+                ->get();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
+    public static function see_course($only_course_id)
+    {
+        try {
+            $data = only_courses::whereIn('id',$only_course_id)
+                ->select('name', 'category','nature','credit','hours','number_classes')
+                ->get()
+                ->toArray();
+            return $data;
+        } catch (Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
 
 }

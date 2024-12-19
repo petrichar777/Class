@@ -225,6 +225,19 @@ class teacher_semester_stats extends Model
         }
         return false;
     }
+    public static function new_data($ids,$semester)
+    {
+        try {
+            $data = teacher_semester_stats::whereIn('teacher_id', $ids)
+                ->where('semester',$semester)
+                ->select('teaching_hours','course_count','class_count')
+                ->get()
+                ->toArray();
+            return $data;
+        }catch(Exception $e) {
+            return 'error: ' . $e->getMessage();
+        }
+    }
 
 
 
