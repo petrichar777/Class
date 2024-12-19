@@ -9,6 +9,7 @@ class only_courses extends Model
 {
     use HasFactory;
 
+
     protected $table = "only_courses";
     public $timestamps = true;
     protected $primaryKey = "id";
@@ -68,6 +69,7 @@ class only_courses extends Model
             return 'error: ' . $e->getMessage();
         }
     }
+
 
 
 
